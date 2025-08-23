@@ -1,0 +1,33 @@
+{
+  "environments": {
+    "qa": {
+      "email": {
+        "smtpHost": "smtp.gmail.com",
+        "smtpPort": 587,
+        "username": "exavalu.karate@gmail.com",
+        "password": "uzkb hwib medc lagp",
+        "from": "exavalu.karate@gmail.com"
+      },
+      "slack": {
+        "webhookUrl": "https://hooks.slack.com/services/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",
+        "channel": "#all-karatetest",
+        "username": "nandan",
+        "iconEmoji": ":robot_face:"
+      },
+      "teams": {
+        "webhookUrl": "https://exavalu.webhook.office.com/webhookb2/9d18104c-03c1-4298-ac50-d2c9b5b72314@ee19a561-5b69-430d-9e17-a12af3c2b3bc/IncomingWebhook/f1c643cae7d7470bbed305bcf44aac27/4f3c32c1-5387-4552-ac0f-28dbaf75a354/V2-s4SuPeXSZffPGJ3Q4Millo8tIkrvb0YZ0cxjRtXpSo1",
+        "title": "🧪 Karate Test Results",
+        "subtitle": "PostgreSQL Integration Tests"
+      },
+      "recipients": {
+        "to": ["nandu.sudarsan@exavalu.com"],
+        "cc": ["Sivaraj.Subramanian@Exavalu.com"],
+        "bcc": ["Nagarjuna.Yeruva@Exavalu.com", "Meghna.Chakraborty@Exavalu.com"]
+      },
+      "retry": {
+        "maxAttempts": 3,
+        "delayMs": 1000
+      }
+    }
+  }
+}

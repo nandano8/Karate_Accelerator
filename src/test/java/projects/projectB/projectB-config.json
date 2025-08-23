@@ -1,0 +1,11 @@
+{
+    "environments": {
+        "dev":{
+            "baseUrl":"https://jsonplaceholder.typicode.com/posts/1"
+        },
+        "qa":{
+            "baseUrl":"https://jsonplaceholder.typicode.com/posts/1"
+        }
+
+    }
+}

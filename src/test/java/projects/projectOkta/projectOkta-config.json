@@ -1,0 +1,22 @@
+{
+  "environments": {
+    "qa": {
+      "oktaDomain": "https://dev-12345678.okta.com",
+      "clientId": "your_client_id",
+      "clientSecret": "your_client_secret",
+      "scope": "openid profile email",
+      "redirectUri": "http://localhost:8080/callback",
+      "retry": {
+        "maxAttempts": 3,
+        "delayMs": 2000
+      }
+    },
+    "prod": {
+      "oktaDomain": "https://prod-12345678.okta.com",
+      "clientId": "your_prod_client_id",
+      "clientSecret": "your_prod_client_secret",
+      "scope": "openid profile email",
+      "redirectUri": "https://yourapp.com/callback"
+    }
+  }
+}

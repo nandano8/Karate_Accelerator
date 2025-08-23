@@ -1,0 +1,4 @@
+target/
+.mvn
+.vscode
+src/test/java/utilities/src/*.class

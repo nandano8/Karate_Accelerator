@@ -1,0 +1,23 @@
+{
+  "environments": {
+    "qa": {
+      "sourceSftp": {
+        "host": "source-sftp.example.com",
+        "port": 22,
+        "user": "source_user",
+        "password": "source_password"
+      },
+      "targetSftp": {
+        "host": "target-sftp.example.com",
+        "port": 22,
+        "user": "target_user",
+        "password": "target_password"
+      },
+      "encryptionKey": "MySecretKey12345",
+      "retry": {
+        "maxAttempts": 5,
+        "delayMs": 3000
+      }
+    }
+  }
+}

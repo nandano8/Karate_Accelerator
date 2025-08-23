@@ -1,0 +1,26 @@
+curl -X PUT "https://api.example.com/users/12345?notify=true&adminOverride=false" \
+  -H "Authorization: Bearer your_token_ABC123456" \
+  -H "Content-Type: application/json" \
+  -H "X-Request-ID: 7890-update-user" \
+  -d '{
+    "name": "Meghna Chakraborty",
+    "email": "meghna@example.com",
+    "phone": "+91-9876543210",
+    "address": {
+      "line1": "123 Park Street",
+      "line2": "Apt 45B",
+      "city": "Kolkata",
+      "state": "West Bengal",
+      "postalCode": "700016",
+      "country": "India"
+    },
+    "preferences": {
+      "newsletter": true,
+      "notifications": {
+        "email": true,
+        "sms": false,
+        "push": true
+      }
+    },
+    "roles": ["user", "beta-tester"]
+  }'

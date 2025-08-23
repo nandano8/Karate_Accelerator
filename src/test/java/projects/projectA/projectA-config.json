@@ -1,0 +1,11 @@
+{
+    "environments": {
+        "dev":{
+            "baseUrl":"https://conduit-api.bondaracademy.com/api/users/login"
+        },
+        "qa":{
+            "baseUrl":"https://conduit-api.bondaracademy.com/api/users/login"
+        }
+
+    }
+}
