@@ -1,10 +1,10 @@
 function() {
-    var DatabaseHelper = Java.type('utilities.DatabaseHelper');
+    var KarateDatabaseService = Java.type('utilities.KarateDatabaseService');
     
     return {
         connect: function(url, username, password) {
             try {
-                DatabaseHelper.connect(url, username, password);
+                KarateDatabaseService.connect(url, username, password);
                 return { success: true };
             } catch (e) {
                 return { success: false, error: e.message };
@@ -14,7 +14,7 @@ function() {
         select: function(sql, params) {
             try {
                 var args = params || [];
-                return DatabaseHelper.select(sql, args);
+                return KarateDatabaseService.select(sql, args);
             } catch (e) {
                 throw new Error('SQL Error: ' + e.message);
             }
@@ -23,7 +23,7 @@ function() {
         insert: function(sql, params) {
             try {
                 var args = params || [];
-                return DatabaseHelper.insert(sql, args);
+                return KarateDatabaseService.insert(sql, args);
             } catch (e) {
                 throw new Error('SQL Error: ' + e.message);
             }
@@ -32,7 +32,7 @@ function() {
         update: function(sql, params) {
             try {
                 var args = params || [];
-                return DatabaseHelper.update(sql, args);
+                return KarateDatabaseService.update(sql, args);
             } catch (e) {
                 throw new Error('SQL Error: ' + e.message);
             }
@@ -41,7 +41,7 @@ function() {
         delete: function(sql, params) {
             try {
                 var args = params || [];
-                return DatabaseHelper.delete(sql, args);
+                return KarateDatabaseService.delete(sql, args);
             } catch (e) {
                 throw new Error('SQL Error: ' + e.message);
             }
@@ -49,7 +49,7 @@ function() {
         
         disconnect: function() {
             try {
-                DatabaseHelper.disconnect();
+                KarateDatabaseService.disconnect();
                 return { success: true };
             } catch (e) {
                 return { success: false, error: e.message };
@@ -58,7 +58,7 @@ function() {
         
         isConnected: function() {
             try {
-                return DatabaseHelper.isConnected();
+                return KarateDatabaseService.isConnected();
             } catch (e) {
                 return false;
             }

@@ -2,13 +2,15 @@ package utilities;
 
 import javax.mail.*;
 import javax.mail.internet.*;
+import javax.activation.*;
 import java.util.*;
+import java.io.File;
 
 public class EmailNotificationService {
     
     public static Map<String, Object> sendEmail(String smtpHost, int smtpPort, String username, String password,
                                                String from, String[] to, String[] cc, String[] bcc,
-                                               String subject, String body, boolean isHtml) {
+                                               String subject, String body, boolean isHtml, String attachmentPath) {
         Map<String, Object> result = new HashMap<>();
         
         try {
@@ -56,7 +58,28 @@ public class EmailNotificationService {
             }
             
             message.setSubject(subject);
-            message.setContent(body, isHtml ? "text/html" : "text/plain");
+            
+            if (attachmentPath != null && new File(attachmentPath).exists()) {
+                // Create multipart message with attachment
+                Multipart multipart = new MimeMultipart();
+                
+                // Add text part
+                BodyPart messageBodyPart = new MimeBodyPart();
+                messageBodyPart.setContent(body, isHtml ? "text/html" : "text/plain");
+                multipart.addBodyPart(messageBodyPart);
+                
+                // Add attachment
+                messageBodyPart = new MimeBodyPart();
+                DataSource source = new FileDataSource(attachmentPath);
+                messageBodyPart.setDataHandler(new DataHandler(source));
+                messageBodyPart.setFileName(new File(attachmentPath).getName());
+                multipart.addBodyPart(messageBodyPart);
+                
+                message.setContent(multipart);
+            } else {
+                message.setContent(body, isHtml ? "text/html" : "text/plain");
+            }
+            
             message.setSentDate(new Date());
             
             Transport.send(message);
@@ -75,8 +98,20 @@ public class EmailNotificationService {
         return result;
     }
     
+    public static Map<String, Object> sendEmail(String smtpHost, int smtpPort, String username, String password,
+                                               String from, String[] to, String[] cc, String[] bcc,
+                                               String subject, String body, boolean isHtml) {
+        return sendEmail(smtpHost, smtpPort, username, password, from, to, cc, bcc, subject, body, isHtml, null);
+    }
+    
     public static Map<String, Object> sendSimpleEmail(String smtpHost, int smtpPort, String username, String password,
                                                      String from, String to, String subject, String body) {
         return sendEmail(smtpHost, smtpPort, username, password, from, new String[]{to}, null, null, subject, body, false);
+    }
+    
+    public static Map<String, Object> sendEmailWithAttachment(String smtpHost, int smtpPort, String username, String password,
+                                                             String from, String[] to, String[] cc, String[] bcc,
+                                                             String subject, String body, boolean isHtml, String attachmentPath) {
+        return sendEmail(smtpHost, smtpPort, username, password, from, to, cc, bcc, subject, body, isHtml, attachmentPath);
     }
 }

@@ -13,7 +13,7 @@ public class TeamsNotificationService {
     
     public static Map<String, Object> sendTeamsMessage(String webhookUrl, String title, String subtitle, 
                                                       String status, int totalTests, int passed, int failed, 
-                                                      String timestamp, String htmlReportPath) {
+                                                      String timestamp, String htmlReportPath, String allureReportPath) {
         Map<String, Object> result = new HashMap<>();
         
         try (CloseableHttpClient client = HttpClients.createDefault()) {
@@ -39,15 +39,39 @@ public class TeamsNotificationService {
             payload.append("{\"name\":\"Failed\",\"value\":\"").append(failed).append("\"},");
             payload.append("{\"name\":\"Timestamp\",\"value\":\"").append(timestamp).append("\"}");
             if (htmlReportPath != null) {
-                payload.append(",{\"name\":\"HTML Report\",\"value\":\"[View Report](").append(htmlReportPath).append(")\"}");
+                payload.append(",{\"name\":\"Karate Report\",\"value\":\"[View Report](").append(htmlReportPath).append(")\"}");
+            }
+            if (allureReportPath != null) {
+                payload.append(",{\"name\":\"Allure Report\",\"value\":\"[View Allure Report](").append(allureReportPath).append(")\"}");
             }
             payload.append("]}]");
-            if (htmlReportPath != null) {
-                payload.append(",\"potentialAction\":[{");
-                payload.append("\"@type\":\"OpenUri\",");
-                payload.append("\"name\":\"View HTML Report\",");
-                payload.append("\"targets\":[{\"os\":\"default\",\"uri\":\"").append(htmlReportPath).append("\"}]");
-                payload.append("}]");
+            
+            // Add action buttons for reports
+            boolean hasActions = htmlReportPath != null || allureReportPath != null;
+            if (hasActions) {
+                payload.append(",\"potentialAction\":[");
+                boolean firstAction = true;
+                
+                if (htmlReportPath != null) {
+                    if (!firstAction) payload.append(",");
+                    payload.append("{");
+                    payload.append("\"@type\":\"OpenUri\",");
+                    payload.append("\"name\":\"📋 View Karate Report\",");
+                    payload.append("\"targets\":[{\"os\":\"default\",\"uri\":\"").append(htmlReportPath).append("\"}]");
+                    payload.append("}");
+                    firstAction = false;
+                }
+                
+                if (allureReportPath != null) {
+                    if (!firstAction) payload.append(",");
+                    payload.append("{");
+                    payload.append("\"@type\":\"OpenUri\",");
+                    payload.append("\"name\":\"📊 View Allure Report\",");
+                    payload.append("\"targets\":[{\"os\":\"default\",\"uri\":\"").append(allureReportPath).append("\"}]");
+                    payload.append("}");
+                }
+                
+                payload.append("]");
             }
             payload.append("}");
             

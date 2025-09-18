@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Database Tests",
+    "matchedStatuses": ["passed", "failed", "broken"],
+    "messageRegex": ".*database.*"
+  },
+  {
+    "name": "API Tests", 
+    "matchedStatuses": ["passed", "failed", "broken"],
+    "messageRegex": ".*api.*"
+  },
+  {
+    "name": "Notification Tests",
+    "matchedStatuses": ["passed", "failed", "broken"], 
+    "messageRegex": ".*notification.*"
+  },
+  {
+    "name": "Authentication Tests",
+    "matchedStatuses": ["passed", "failed", "broken"],
+    "messageRegex": ".*okta.*|.*token.*"
+  },
+  {
+    "name": "Utility Tests",
+    "matchedStatuses": ["passed", "failed", "broken"],
+    "messageRegex": ".*utility.*|.*encryption.*|.*sftp.*"
+  }
+]

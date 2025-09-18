@@ -37,10 +37,14 @@ public class KarateDatabaseService {
                 results.add(row);
             }
             
+            // Add Allure attachment for database query
+            AllureAttachmentHelper.addDatabaseQueryDetails(query, params, results);
+            
             resultSet.close();
             statement.close();
             return results;
         } catch (SQLException e) {
+            AllureAttachmentHelper.addErrorDetails("Database SELECT failed", e.getMessage());
             throw new RuntimeException("SELECT query failed: " + e.getMessage());
         }
     }
@@ -62,9 +66,14 @@ public class KarateDatabaseService {
             statement = connection.prepareStatement(query);
             setParameters(params);
             int result = statement.executeUpdate();
+            
+            // Add Allure attachment for database update
+            AllureAttachmentHelper.addDatabaseQueryDetails(query, params, result + " rows affected");
+            
             statement.close();
             return result;
         } catch (SQLException e) {
+            AllureAttachmentHelper.addErrorDetails("Database UPDATE failed", e.getMessage());
             throw new RuntimeException("Update query failed: " + e.getMessage());
         }
     }

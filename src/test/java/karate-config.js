@@ -11,7 +11,12 @@ function fn(){
         karate.log("As env is not specified using ", env);
     }
 
-    var configFile = 'classpath:projects/'+project+'/'+project+'-config.json';
+    var configFile;
+    if (project === 'projectSQL' || project === 'projectNotifications') {
+        configFile = 'classpath:utilities/'+project+'/'+project+'-config.json';
+    } else {
+        configFile = 'classpath:projects/'+project+'/'+project+'-config.json';
+    }
     var configData = karate.read(configFile);
 
     var envConfig = configData.environments[env]? configData.environments[env]:'';
@@ -40,6 +45,9 @@ function fn(){
     config.testHook = Java.type('utilities.TestLifecycleHook');
     config.testRunner = Java.type('utilities.TestNotificationRunner');
 
+    // Make services available globally
+    karate.set('db', config.db);
+    
     karate.log(config);
     return config;
 }

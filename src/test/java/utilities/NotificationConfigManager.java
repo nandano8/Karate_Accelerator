@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 public class NotificationConfigManager {
     
@@ -14,7 +16,7 @@ public class NotificationConfigManager {
         if (cachedConfig == null) {
             cachedConfig = loadConfigFromFile();
         }
-        return cachedConfig != null ? cachedConfig : getDefaultConfig();
+        return cachedConfig != null ? resolveParameters(cachedConfig) : getDefaultConfig();
     }
     
     private static Map<String, Object> loadConfigFromFile() {
@@ -28,6 +30,76 @@ public class NotificationConfigManager {
             NotificationLogger.error("Failed to load notification config from file: " + e.getMessage(), e);
         }
         return null;
+    }
+    
+    private static Map<String, Object> resolveParameters(Map<String, Object> config) {
+        Map<String, Object> resolved = new HashMap<>();
+        
+        for (Map.Entry<String, Object> entry : config.entrySet()) {
+            if (entry.getValue() instanceof Map) {
+                resolved.put(entry.getKey(), resolveParameters((Map<String, Object>) entry.getValue()));
+            } else if (entry.getValue() instanceof String) {
+                String value = (String) entry.getValue();
+                if (value.startsWith("${") && value.endsWith("}")) {
+                    resolved.put(entry.getKey(), resolveParameter(value));
+                } else {
+                    resolved.put(entry.getKey(), value);
+                }
+            } else {
+                resolved.put(entry.getKey(), entry.getValue());
+            }
+        }
+        
+        // Handle special cases for recipients (convert comma-separated strings to arrays)
+        if (resolved.containsKey("recipients")) {
+            Map<String, Object> recipients = (Map<String, Object>) resolved.get("recipients");
+            Map<String, Object> processedRecipients = new HashMap<>();
+            
+            for (Map.Entry<String, Object> recipientEntry : recipients.entrySet()) {
+                if (recipientEntry.getValue() instanceof String) {
+                    String value = (String) recipientEntry.getValue();
+                    if (value.contains(",")) {
+                        List<String> emailList = Arrays.asList(value.split(","));
+                        processedRecipients.put(recipientEntry.getKey(), emailList.toArray(new String[0]));
+                    } else {
+                        processedRecipients.put(recipientEntry.getKey(), new String[]{value});
+                    }
+                } else {
+                    processedRecipients.put(recipientEntry.getKey(), recipientEntry.getValue());
+                }
+            }
+            resolved.put("recipients", processedRecipients);
+        }
+        
+        return resolved;
+    }
+    
+    private static Object resolveParameter(String parameterExpression) {
+        // Extract parameter name and default value from ${PARAM_NAME:defaultValue}
+        String content = parameterExpression.substring(2, parameterExpression.length() - 1);
+        String[] parts = content.split(":", 2);
+        String paramName = parts[0];
+        String defaultValue = parts.length > 1 ? parts[1] : "";
+        
+        // Try system property first, then environment variable, then default
+        String value = System.getProperty(paramName);
+        if (value == null) {
+            value = System.getenv(paramName);
+        }
+        if (value == null) {
+            value = defaultValue;
+        }
+        
+        // Convert string values to appropriate types
+        if ("true".equalsIgnoreCase(value) || "false".equalsIgnoreCase(value)) {
+            return Boolean.parseBoolean(value);
+        }
+        
+        try {
+            return Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return value;
+        }
     }
     
     private static Map<String, Object> getDefaultConfig() {
@@ -70,5 +142,20 @@ public class NotificationConfigManager {
     
     public static void clearCache() {
         cachedConfig = null;
+    }
+    
+    // Utility method to get pipeline context
+    public static Map<String, String> getPipelineContext() {
+        Map<String, String> context = new HashMap<>();
+        Map<String, Object> config = getNotificationConfig();
+        
+        if (config.containsKey("pipeline")) {
+            Map<String, Object> pipeline = (Map<String, Object>) config.get("pipeline");
+            for (Map.Entry<String, Object> entry : pipeline.entrySet()) {
+                context.put(entry.getKey(), String.valueOf(entry.getValue()));
+            }
+        }
+        
+        return context;
     }
 }

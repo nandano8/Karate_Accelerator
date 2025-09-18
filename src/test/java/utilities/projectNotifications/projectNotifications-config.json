@@ -1,0 +1,42 @@
+{
+  "environments": {
+    "qa": {
+      "email": {
+        "enabled": "${EMAIL_ENABLED:true}",
+        "smtpHost": "${SMTP_HOST:smtp.gmail.com}",
+        "smtpPort": "${SMTP_PORT:587}",
+        "username": "${EMAIL_USERNAME:exavalu.karate@gmail.com}",
+        "password": "${EMAIL_PASSWORD:uzkb hwib medc lagp}",
+        "from": "${EMAIL_FROM:exavalu.karate@gmail.com}"
+      },
+      "slack": {
+        "enabled": "${SLACK_ENABLED:true}",
+        "webhookUrl": "${SLACK_WEBHOOK_URL:https://hooks.slack.com/services/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}",
+        "channel": "${SLACK_CHANNEL:#all-karatetest}",
+        "username": "${SLACK_USERNAME:nandan}",
+        "iconEmoji": "${SLACK_ICON::robot_face:}"
+      },
+      "teams": {
+        "enabled": "${TEAMS_ENABLED:true}",
+        "webhookUrl": "${TEAMS_WEBHOOK_URL:https://defaultaab19002fe2d4488ae543316324c96.c2.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/5f72624b2dab4c008ff88b73e1fe530d/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=9ZXAZoQPi2bGSYed9FSinUAOCMdHbNYh_X1MNs4YfAk}",
+        "title": "${TEAMS_TITLE:🧪 Karate Test Results}",
+        "subtitle": "${TEAMS_SUBTITLE:${PROJECT_NAME:PostgreSQL} Integration Tests}"
+      },
+      "recipients": {
+        "to": "${EMAIL_TO:nandu.sudarsan@exavalu.com}",
+        "cc": "${EMAIL_CC:Sivaraj.Subramanian@Exavalu.com}",
+        "bcc": "${EMAIL_BCC:Nagarjuna.Yeruva@Exavalu.com,Meghna.Chakraborty@Exavalu.com}"
+      },
+      "retry": {
+        "maxAttempts": "${RETRY_MAX_ATTEMPTS:3}",
+        "delayMs": "${RETRY_DELAY_MS:1000}"
+      },
+      "pipeline": {
+        "buildNumber": "${BUILD_NUMBER:local}",
+        "branchName": "${BRANCH_NAME:main}",
+        "environment": "${TEST_ENVIRONMENT:qa}",
+        "triggeredBy": "${TRIGGERED_BY:manual}"
+      }
+    }
+  }
+}
